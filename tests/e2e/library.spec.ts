@@ -1,10 +1,31 @@
 import { test, expect } from '@playwright/test';
-test('empty template has accessible primary pages', async ({ page }) => {
+test('personalized library exposes Paper Pool, Quick Read, reports and Daily Archive', async ({
+  page,
+}) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Your Research Library' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: "HuoBu's Materials Property Prediction Library" }),
+  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: '今日论文' })).toBeVisible();
+
   await page.getByRole('link', { name: '论文池', exact: true }).click();
   await expect(page.getByRole('heading', { name: '论文池' })).toBeVisible();
-  await expect(page.getByText('还没有论文。')).toBeVisible();
+  const todayPaper = page.getByRole('link', {
+    name: 'Optimal pre-train/fine-tune strategies for accurate material property predictions',
+  });
+  await expect(todayPaper).toBeVisible();
+  await todayPaper.click();
+
+  await expect(page.getByRole('heading', { name: '快速阅读' })).toBeVisible();
+  await expect(page.locator('.quick-read p').filter({ hasText: /以 ALIGNN 为基础/ })).toBeVisible();
+  await page.getByRole('button', { name: '阅读详情 ↓' }).click();
+  await expect(page.getByRole('heading', { name: '核心方法', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '论文贡献 / Contributions' })).toBeVisible();
+
+  await page.getByRole('link', { name: '每日归档', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '每日归档' })).toBeVisible();
+  await expect(page.getByText('2026-09-16')).toBeVisible();
+  await expect(todayPaper).toBeVisible();
 });
 test('hero title wraps long text without overflowing at desktop and mobile widths', async ({
   page,

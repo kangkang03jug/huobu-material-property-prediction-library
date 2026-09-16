@@ -1,11 +1,14 @@
 profile:
-  researcher: 'Your Name'
-  library_name: 'Your Research Library'
-  description: 'A calm, searchable research knowledge base.'
+  researcher: HuoBu
+  library_name: HuoBu's Materials Property Prediction Library
+  description: 面向材料属性预测的个人论文库，整理模型、数据、评估与可复现证据。
 research_scope:
   primary:
-    - 'Your Primary Research Direction'
-  secondary: []
+    - Materials Property Prediction
+  secondary:
+    - Materials Informatics
+    - Crystal Graph Neural Networks
+    - Machine-Learned Interatomic Potentials
 paper_selection:
   recent_year_window: 3
   priority: [quality, relevance]
@@ -15,12 +18,12 @@ paper_selection:
   journals: { prefer: [], allow: [] }
   preprints: { allowed: true, require_exact_source: true }
 language:
-  explanation: 'zh-CN'
-  terminology: 'mixed-zh-en'
+  explanation: zh-CN
+  terminology: mixed-zh-en
 daily:
   papers_per_run: 1
-  timezone: 'Asia/Shanghai'
+  timezone: Asia/Shanghai
   scheduled_time: '08:00'
 editor:
-  owner_github_username: ''
+  owner_github_username: kangkang03jug
   api_origin: ''
