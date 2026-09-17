@@ -38,14 +38,14 @@
   "relevance": "High",
   "reading_basis": "official_html",
   "quick_read": {
-    "tldr": "该基准研究用五种分布外测试构造评估八类结构 GNN 在介电、弹性和钙钛矿性质任务上的外推表现。模型在 OOD 测试中整体弱于随机划分结果，且没有一种模型在所有数据集与 OOD 场景中稳定胜出。",
-    "problem_and_motivation": "材料数据库中相似结构和组成高度重复，随机交叉验证可能让测试样本接近训练数据，从而高估新材料筛选时的真实泛化能力。",
-    "core_method": "基于三个 MatBench 数据集构造 LOCO、SparseXsingle、SparseXcluster、SparseYsingle、SparseYcluster 五种 OOD 测试目标；比较八个 GNN，并以 MAE 与常规 MatBench 基线对照。",
-    "key_results": "大多数模型在 OOD 测试上的 MAE 明显高于 i.i.d. 基线；没有模型在全部任务领先。CGCNN、ALIGNN 和 DeeperGATGNN 在多种场景表现相对稳健，但最佳模型随材料任务和 OOD 划分而变。",
-    "why_it_matters": "材料性质模型不能只依据随机划分的排行榜判断筛选价值。按化学、结构或目标性质构造分布偏移测试，更接近发现新材料时的预测条件。"
+    "tldr": "论文用五种分布外划分评估八类结构图神经网络，发现随机划分会高估新材料预测能力。",
+    "problem_and_motivation": "材料数据库中结构和组成常有重复，随机测试样本可能与训练数据很像。论文要测量模型遇到真正新材料时会掉多少。",
+    "core_method": "在三个 MatBench 数据集上构造按组成和结构留出的五种划分，再比较八类模型在随机与分布外测试中的差异。",
+    "key_results": "分布外测试的平均绝对误差通常高于随机划分；没有模型在所有任务和划分上都最好。",
+    "why_it_matters": "新材料筛选必须加入按组成或结构留出的测试，不能只看随机划分排行榜。"
   },
   "detail": {
-    "motivation": "材料性质预测的实际目标常是已知数据之外的新材料，而常见随机划分可能因材料库中的结构与组成冗余，让训练集和测试集过于相似。论文要检验结构 GNN 在这种真实外推情形下是否仍有随机划分所显示的性能，并比较哪些模型对不同 OOD 定义更稳健。",
+    "motivation": "随机划分可能让结构相近的样本同时出现在训练和测试集中，导致结果看起来过于乐观。作者希望用更严格的留出方式评估真实外推能力。",
     "contributions": [
       {
         "contribution": "为介电常数、弹性模量和钙钛矿形成能三个 MatBench 任务设计五类 OOD 测试目标，覆盖离群组成、结构或性质区域。",
@@ -73,8 +73,8 @@
     ],
     "research_questions_empty_reason": null,
     "research_questions_empty_source": null,
-    "method": "作者选择三个 MatBench 数据集：介电、弹性和钙钛矿形成能；为每类任务构造五种 OOD 测试目标：leave-one-cluster-out (LOCO)、SparseXsingle、SparseXcluster、SparseYsingle 和 SparseYcluster。论文比较八种结构 GNN，在各 OOD 设置中进行 50-fold 评估，以 MAE 衡量回归误差，并与随机划分基线比较。作者还对部分钙钛矿模型的潜在表示进行 t-SNE 可视化分析。",
-    "experiments_and_key_findings": "作者报告 OOD 测试的 MAE 总体高于随机划分 MatBench 基线，没有模型能在所有数据集与目标构造方式上胜出。介电任务上 coGN/coNGN 在部分 SparseXsingle 目标领先，而 ALIGNN 在 SparseYsingle 上表现突出；弹性和钙钛矿任务上 CGCNN、ALIGNN、DeeperGATGNN 在若干目标更稳健。讨论部分称研究训练了 6,000 个 GNN 模型。来源：Results, “Performance comparison on OOD test sets”; Discussion。",
+    "method": "在三个 MatBench 数据集上构造 LOCO、SparseXsingle、SparseXcluster、SparseYsingle 和 SparseYcluster 五种分布外划分，比较八类结构图神经网络。",
+    "experiments_and_key_findings": "分布外划分下的平均绝对误差通常高于随机划分，而且不同任务的最佳模型并不一致。结果表明，模型对真正未见组成或结构的外推仍不稳定。",
     "limitations": {
       "author_reported": [],
       "ai_analysis": [
@@ -83,8 +83,8 @@
         "论文以 MAE 比较点预测表现；部署到高风险筛选流程时，还需另外验证不确定性校准和候选排序质量。"
       ]
     },
-    "relation_to_research": "这篇论文为材料属性预测提供了评估设计上的直接参考。若 HuoBu 的目标是筛选未知材料，应把按组成、结构族或性质区间留出的 OOD 评估，与常规随机交叉验证并列报告。",
-    "what_can_be_done_next": "复用论文的 OOD 思路，为目标材料数据集设计按化学组成或晶体结构族聚类的留出测试；比较随机切分与 OOD 切分之间 MAE 和模型排序的变化，再评估不确定性是否能识别高误差区域。"
+    "relation_to_research": "这项基准研究提醒材料模型研究把数据划分当作实验变量，适合用来检验迁移学习和预训练是否真的提升外推能力。",
+    "what_can_be_done_next": "在自己的材料任务中同时报告随机、按组成留出和按结构留出的结果，并分析错误集中在哪些化学家族；再测试预训练模型是否能减少这种外推落差。"
   },
   "original_abstract": null,
   "bibtex": "@article{omee2024ood,\n  title={Structure-based out-of-distribution (OOD) materials property prediction: a benchmark study},\n  author={Omee, Sadman Sadeed and Fu, Nihang and Dong, Rongzhi and Hu, Ming and Hu, Jianjun},\n  journal={npj Computational Materials},\n  volume={10},\n  pages={144},\n  year={2024},\n  doi={10.1038/s41524-024-01316-4}\n}",

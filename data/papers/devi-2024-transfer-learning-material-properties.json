@@ -36,14 +36,14 @@
   "relevance": "High",
   "reading_basis": "official_html",
   "quick_read": {
-    "tldr": "以 ALIGNN 为基础，对七类材料性质比较单性质迁移与多性质预训练。多性质预训练在七组迁移中的四组降低 MAE，并在一个域外二维材料 band gap 数据集上优于从头训练和单性质迁移。",
-    "problem_and_motivation": "材料性质数据往往有限，结构图神经网络在小数据下容易过拟合；论文关注如何选预训练性质、数据规模和微调策略，让迁移学习真正优于目标数据上的从头训练。",
-    "core_method": "采用 ALIGNN，基于 Materials Project、Matminer 与 JARVIS 等整理七类性质数据；系统比较 pair-wise transfer learning 的数据规模和微调层冻结策略，再将七类性质合并进行 multi-property training (MPT)。",
-    "key_results": "MPT 在 7 组中的 4 组优于对应 pair-wise 迁移；在 2D band gap 域外数据上，相较 scratch 模型，R² 提升 5.67%，MAE 改善 15.54%。微调时解冻全部网络层在所比较策略中效果最好。",
-    "why_it_matters": "结果提示迁移收益取决于源性质、样本量和目标数据分布；面对材料小样本任务，预训练后充分微调和跨性质联合训练值得与 scratch 基线并行评估。"
+    "tldr": "论文用 ALIGNN 比较单性质迁移和多性质预训练，重点考察预训练性质、数据规模和微调方式。",
+    "problem_and_motivation": "材料性质数据通常很少，模型容易过拟合。论文希望找出更可靠的预训练和微调组合。",
+    "core_method": "整理七类材料性质，比较不同成对迁移、样本量和冻结层策略，再把七类数据合并做多性质预训练。",
+    "key_results": "多性质预训练在 7 组中有 4 组优于成对迁移；二维材料域外带隙预测的 R² 提升 5.67%，平均绝对误差降低 15.54%。",
+    "why_it_matters": "迁移效果取决于源性质、样本量和目标分布，不能只看模型结构。"
   },
   "detail": {
-    "motivation": "结构信息丰富的 GNN 对材料性质预测有潜力，但材料科学中常见的数据集较小，训练容易出现高方差和过拟合。论文将问题聚焦于迁移学习的关键选择：预训练数据来自哪种性质、预训练规模多大、微调时冻结哪些层，以及联合多种性质预训练能否改善跨性质和域外预测。",
+    "motivation": "材料性质数据昂贵且稀少，直接训练容易过拟合。作者系统比较不同源性质和预训练规模，寻找更稳定的迁移路径。",
     "contributions": [
       {
         "contribution": "使用 ALIGNN 对七类计算与实验性质系统比较 pair-wise 预训练/微调组合，并考察数据量、性质相关性、分布和微调层策略。",
@@ -71,8 +71,8 @@
     ],
     "research_questions_empty_reason": null,
     "research_questions_empty_source": null,
-    "method": "使用七类性质数据：剪切模量、最高光学声子峰频率、DFT band gap、形成能、压电模量、介电常数和实验 band gap；样本数约 941 至 132,752。模型基于 ALIGNN。pair-wise 实验比较多种预训练—目标性质配对、不同预训练样本量和四种微调策略；MPT 将七类数据合并预训练。数据采用标准化，并留出测试集；域外测试使用 JARVIS-DFT 的 1,103 个二维材料 band gap 样本。",
-    "experiments_and_key_findings": "作者报告 MPT 在七个目标迁移场景中的四个场景，以 MAE 计优于 pair-wise 迁移。JARVIS-DFT 2D band gap 任务采用 90:10 划分：MPT 相对 scratch 的 R² 提升 5.67%、MAE 改善 15.54%；相对所选最佳规模 pair-wise 模型，平均 R² 提升 6.27%、MAE 改善 9.99%。微调策略比较中，解冻所有 ALIGNN 层在四组 PT-FT 对上表现最佳。来源：Results, “Best FT strategy” and “Out-of-domain transfer learning,” Table 1。",
+    "method": "使用 ALIGNN 作为统一模型，比较成对迁移、多性质预训练、冻结部分层和不同目标样本量，并在域内与域外数据上测试。",
+    "experiments_and_key_findings": "实验覆盖七类性质和多种目标设置。多性质预训练在 7 组中 4 组优于成对迁移；二维材料域外带隙的 R² 提升 5.67%，平均绝对误差降低 15.54%。",
     "limitations": {
       "author_reported": [],
       "ai_analysis": [
@@ -81,8 +81,8 @@
         "应用到 HuoBu 的具体任务时，仍需按化学体系或结构族划分测试集，并报告与 scratch、简单描述符模型的对照。"
       ]
     },
-    "relation_to_research": "与材料属性预测直接相关，尤其适合研究数据稀缺、目标性质彼此相关、或训练与候选材料分布不同的任务。它提供了可复用的比较框架：同时改变预训练性质、预训练规模和微调策略，而不是只比较网络结构。",
-    "what_can_be_done_next": "可在目标材料体系中复现 pair-wise 与多性质预训练对照，并增加按化学组成、原型结构或时间划分的 OOD 测试；记录负迁移出现的条件，再检查预训练性质相关性和样本量是否能解释差异。"
+    "relation_to_research": "这项工作为材料性质预训练提供了统一比较框架，适合与图网络结构改进和主动学习策略结合。",
+    "what_can_be_done_next": "固定 ALIGNN 和数据划分，分别改变源性质、预训练样本量和冻结层比例；同时报告域内、域外误差及不确定性，避免只挑选最优迁移组合。"
   },
   "original_abstract": null,
   "bibtex": "@article{devi2024optimal,\n  title={Optimal pre-train/fine-tune strategies for accurate material property predictions},\n  author={Devi, Reshma and Butler, Keith T. and Sai Gautam, Gopalakrishnan},\n  journal={npj Computational Materials},\n  volume={10},\n  pages={300},\n  year={2024},\n  doi={10.1038/s41524-024-01486-1}\n}",
