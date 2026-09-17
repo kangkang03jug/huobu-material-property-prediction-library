@@ -17,7 +17,7 @@ test('personalized library exposes Paper Pool, Quick Read, reports and Daily Arc
   await todayPaper.click();
 
   await expect(page.getByRole('heading', { name: '快速阅读' })).toBeVisible();
-  await expect(page.locator('.quick-read p').filter({ hasText: /以 ALIGNN 为基础/ })).toBeVisible();
+  await expect(page.locator('.quick-read p').filter({ hasText: /论文用 ALIGNN 比较/ })).toBeVisible();
   await page.getByRole('button', { name: '阅读详情 ↓' }).click();
   await expect(page.getByRole('heading', { name: '核心方法', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: '论文贡献 / Contributions' })).toBeVisible();
