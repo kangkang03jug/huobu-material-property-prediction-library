@@ -32,3 +32,7 @@ GitHub Pages deploys automatically from `main` through `.github/workflows/pages.
 Use `prompts/chatgpt-scheduled-task.md` to set up a recurring task with repository access. Each run reads the research profile and current library, selects one paper, prepares a Quick Read and evidence-backed report, validates the record, and adds a dated entry to Daily Archive. The schedule and timezone are in `config/research-profile.yaml`.
 
 The public site is read-only until the optional editor backend is configured. Do not commit credentials or API keys.
+
+### Detail depth
+
+Quick Read remains a short 1–3 minute orientation. Detail is a substantially expanded, body-backed reading brief with paragraph-level Motivation, Method, Experiments, limitations, profile-specific relation, and 3–6 structured paper-specific follow-up directions. Each `detail.what_can_be_done_next` item contains `title`, `rationale`, `concrete_plan`, `validation`, `expected_value`, and optional `source`; legacy string values remain readable for compatibility.

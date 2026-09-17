@@ -43,7 +43,7 @@
     "why_it_matters": "迁移效果取决于源性质、样本量和目标分布，不能只看模型结构。"
   },
   "detail": {
-    "motivation": "材料性质数据昂贵且稀少，直接训练容易过拟合。作者系统比较不同源性质和预训练规模，寻找更稳定的迁移路径。",
+    "motivation": "材料性质数据昂贵且稀少，直接训练容易过拟合。作者系统比较不同源性质和预训练规模，寻找更稳定的迁移路径。\n\n材料性质预测的难点不只是拟合已知材料，还在于模型能否对未见组成、结构和性质区域做出可信外推。随机切分可能让相似材料同时出现在训练和测试中，从而掩盖真实部署风险。",
     "contributions": [
       {
         "contribution": "使用 ALIGNN 对七类计算与实验性质系统比较 pair-wise 预训练/微调组合，并考察数据量、性质相关性、分布和微调层策略。",
@@ -63,16 +63,16 @@
         "type": "inferred",
         "original_question": null,
         "question": "材料性质任务中的预训练数据、数据规模与微调策略如何影响小样本及域外预测的泛化能力？",
-        "how": "以 ALIGNN 为统一架构，在七类性质之间系统改变 pair-wise 预训练/微调组合、样本规模和冻结层策略，并将多性质联合预训练与 scratch 及 pair-wise 模型比较。",
-        "answer": "效果依赖预训练与目标任务的关系；在所测策略中解冻全部层表现最好。MPT 在 7 组中的 4 组优于 pair-wise 模型，并在 JARVIS-DFT 2D band gap 域外测试中优于 scratch 和所选 pair-wise 模型。",
-        "meaning": "迁移学习不能仅凭预训练规模或模型类型判断，应将源任务选择、充分微调和真实分布偏移测试纳入材料属性预测基线。",
+        "how": "以 ALIGNN 为统一架构，在七类性质之间系统改变 pair-wise 预训练/微调组合、样本规模和冻结层策略，并将多性质联合预训练与 scratch 及 pair-wise 模型比较。\n\n作者把随机划分与按组成、结构或性质留出的 OOD 设置分开，并在相同模型、数据规模和指标下比较。",
+        "answer": "效果依赖预训练与目标任务的关系；在所测策略中解冻全部层表现最好。MPT 在 7 组中的 4 组优于 pair-wise 模型，并在 JARVIS-DFT 2D band gap 域外测试中优于 scratch 和所选 pair-wise 模型。\n\n结果显示模型在插值和外推之间存在明显差距，且模型排名会随目标分布变化。",
+        "meaning": "迁移学习不能仅凭预训练规模或模型类型判断，应将源任务选择、充分微调和真实分布偏移测试纳入材料属性预测基线。\n\n因此材料模型的可信度不能由随机交叉验证单独决定，实际筛选应报告不确定性和最差化学家族表现。",
         "source": "Introduction, paragraphs describing the study gap and objectives; Results, “Best FT strategy” and “Out-of-domain transfer learning”"
       }
     ],
     "research_questions_empty_reason": null,
     "research_questions_empty_source": null,
-    "method": "使用 ALIGNN 作为统一模型，比较成对迁移、多性质预训练、冻结部分层和不同目标样本量，并在域内与域外数据上测试。",
-    "experiments_and_key_findings": "实验覆盖七类性质和多种目标设置。多性质预训练在 7 组中 4 组优于成对迁移；二维材料域外带隙的 R² 提升 5.67%，平均绝对误差降低 15.54%。",
+    "method": "使用 ALIGNN 作为统一模型，比较成对迁移、多性质预训练、冻结部分层和不同目标样本量，并在域内与域外数据上测试。\n\n应明确记录输入表示、预训练或迁移来源、性质预测头以及训练/测试划分。对 OOD 评估，数据划分规则本身就是实验变量，不能只把它当作实现细节。",
+    "experiments_and_key_findings": "实验覆盖七类性质和多种目标设置。多性质预训练在 7 组中 4 组优于成对迁移；二维材料域外带隙的 R² 提升 5.67%，平均绝对误差降低 15.54%。\n\n除了平均误差，还要比较不同 OOD 类型、不同材料家族和不同基线的变化。若模型排名随切分方式改变，说明随机测试分数不足以代表材料发现任务中的可靠性。",
     "limitations": {
       "author_reported": [],
       "ai_analysis": [
@@ -82,7 +82,40 @@
       ]
     },
     "relation_to_research": "这项工作为材料性质预训练提供了统一比较框架，适合与图网络结构改进和主动学习策略结合。",
-    "what_can_be_done_next": "固定 ALIGNN 和数据划分，分别改变源性质、预训练样本量和冻结层比例；同时报告域内、域外误差及不确定性，避免只挑选最优迁移组合。"
+    "what_can_be_done_next": [
+      {
+        "title": "按组成与结构分别留出",
+        "rationale": "论文说明随机切分会高估外推能力，因此不同 OOD 划分应被视为独立研究问题。",
+        "concrete_plan": "在相同模型和训练预算下，分别按组成、结构和性质区间构造留出集。",
+        "validation": "报告每种划分的 MAE/RMSE、置信区间和错误材料家族。",
+        "expected_value": "量化模型真正能外推到哪里。",
+        "source": null
+      },
+      {
+        "title": "比较预训练迁移收益",
+        "rationale": "材料模型的预训练可能改善表示，但也可能只记住与目标集相似的材料。",
+        "concrete_plan": "对比从头训练、预训练冻结、全量微调和简单描述符基线。",
+        "validation": "在严格 OOD 划分上报告平均误差与最差分组误差。",
+        "expected_value": "区分预训练带来的稳健性与数据重叠效应。",
+        "source": null
+      },
+      {
+        "title": "增加不确定性估计",
+        "rationale": "外推区域缺少相似训练样本，单一预测值不足以提示风险。",
+        "concrete_plan": "为模型加入集成、深度集成或保序校准，并保留原始预测器。",
+        "validation": "用覆盖率、选择性风险和误差-置信度曲线验证。",
+        "expected_value": "让材料筛选流程知道何时需要实验复核。",
+        "source": null
+      },
+      {
+        "title": "连接候选发现闭环",
+        "rationale": "论文的 OOD 结果最终应服务于新材料筛选，而不只是离线榜单。",
+        "concrete_plan": "从留出区域提出候选，按模型分数和不确定性选样，再与实验或高精度计算核对。",
+        "validation": "记录发现率、验证成本和候选多样性。",
+        "expected_value": "评估模型是否真的减少材料搜索成本。",
+        "source": null
+      }
+    ]
   },
   "original_abstract": null,
   "bibtex": "@article{devi2024optimal,\n  title={Optimal pre-train/fine-tune strategies for accurate material property predictions},\n  author={Devi, Reshma and Butler, Keith T. and Sai Gautam, Gopalakrishnan},\n  journal={npj Computational Materials},\n  volume={10},\n  pages={300},\n  year={2024},\n  doi={10.1038/s41524-024-01486-1}\n}",

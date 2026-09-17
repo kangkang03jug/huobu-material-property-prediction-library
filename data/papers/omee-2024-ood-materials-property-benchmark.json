@@ -45,7 +45,7 @@
     "why_it_matters": "新材料筛选必须加入按组成或结构留出的测试，不能只看随机划分排行榜。"
   },
   "detail": {
-    "motivation": "随机划分可能让结构相近的样本同时出现在训练和测试集中，导致结果看起来过于乐观。作者希望用更严格的留出方式评估真实外推能力。",
+    "motivation": "随机划分可能让结构相近的样本同时出现在训练和测试集中，导致结果看起来过于乐观。作者希望用更严格的留出方式评估真实外推能力。\n\n材料性质预测的难点不只是拟合已知材料，还在于模型能否对未见组成、结构和性质区域做出可信外推。随机切分可能让相似材料同时出现在训练和测试中，从而掩盖真实部署风险。",
     "contributions": [
       {
         "contribution": "为介电常数、弹性模量和钙钛矿形成能三个 MatBench 任务设计五类 OOD 测试目标，覆盖离群组成、结构或性质区域。",
@@ -65,16 +65,16 @@
         "type": "inferred",
         "original_question": null,
         "question": "结构 GNN 在材料分布外预测中的实际泛化能力如何，随机交叉验证中的模型排序能否代表新材料筛选表现？",
-        "how": "对三个 MatBench 数据集构造五种 OOD 目标划分，使用 50-fold 评估八类 GNN，并比较 MAE 与 MatBench 随机划分基线。",
-        "answer": "整体 OOD 误差高于 i.i.d. 基线，且不存在跨数据集和切分策略通用的获胜模型。CGCNN、ALIGNN、DeeperGATGNN 在若干任务较稳健，但优势依赖具体 OOD 目标。",
-        "meaning": "随机划分适合测量插值，却可能夸大材料发现中的外推能力；模型评估应根据预期的化学空间、结构族和性质分布偏移设计测试集。",
+        "how": "对三个 MatBench 数据集构造五种 OOD 目标划分，使用 50-fold 评估八类 GNN，并比较 MAE 与 MatBench 随机划分基线。\n\n作者把随机划分与按组成、结构或性质留出的 OOD 设置分开，并在相同模型、数据规模和指标下比较。",
+        "answer": "整体 OOD 误差高于 i.i.d. 基线，且不存在跨数据集和切分策略通用的获胜模型。CGCNN、ALIGNN、DeeperGATGNN 在若干任务较稳健，但优势依赖具体 OOD 目标。\n\n结果显示模型在插值和外推之间存在明显差距，且模型排名会随目标分布变化。",
+        "meaning": "随机划分适合测量插值，却可能夸大材料发现中的外推能力；模型评估应根据预期的化学空间、结构族和性质分布偏移设计测试集。\n\n因此材料模型的可信度不能由随机交叉验证单独决定，实际筛选应报告不确定性和最差化学家族表现。",
         "source": "Introduction, paragraphs describing dataset redundancy and the OOD evaluation gap; Abstract"
       }
     ],
     "research_questions_empty_reason": null,
     "research_questions_empty_source": null,
-    "method": "在三个 MatBench 数据集上构造 LOCO、SparseXsingle、SparseXcluster、SparseYsingle 和 SparseYcluster 五种分布外划分，比较八类结构图神经网络。",
-    "experiments_and_key_findings": "分布外划分下的平均绝对误差通常高于随机划分，而且不同任务的最佳模型并不一致。结果表明，模型对真正未见组成或结构的外推仍不稳定。",
+    "method": "在三个 MatBench 数据集上构造 LOCO、SparseXsingle、SparseXcluster、SparseYsingle 和 SparseYcluster 五种分布外划分，比较八类结构图神经网络。\n\n应明确记录输入表示、预训练或迁移来源、性质预测头以及训练/测试划分。对 OOD 评估，数据划分规则本身就是实验变量，不能只把它当作实现细节。",
+    "experiments_and_key_findings": "分布外划分下的平均绝对误差通常高于随机划分，而且不同任务的最佳模型并不一致。结果表明，模型对真正未见组成或结构的外推仍不稳定。\n\n除了平均误差，还要比较不同 OOD 类型、不同材料家族和不同基线的变化。若模型排名随切分方式改变，说明随机测试分数不足以代表材料发现任务中的可靠性。",
     "limitations": {
       "author_reported": [],
       "ai_analysis": [
@@ -84,7 +84,40 @@
       ]
     },
     "relation_to_research": "这项基准研究提醒材料模型研究把数据划分当作实验变量，适合用来检验迁移学习和预训练是否真的提升外推能力。",
-    "what_can_be_done_next": "在自己的材料任务中同时报告随机、按组成留出和按结构留出的结果，并分析错误集中在哪些化学家族；再测试预训练模型是否能减少这种外推落差。"
+    "what_can_be_done_next": [
+      {
+        "title": "按组成与结构分别留出",
+        "rationale": "论文说明随机切分会高估外推能力，因此不同 OOD 划分应被视为独立研究问题。",
+        "concrete_plan": "在相同模型和训练预算下，分别按组成、结构和性质区间构造留出集。",
+        "validation": "报告每种划分的 MAE/RMSE、置信区间和错误材料家族。",
+        "expected_value": "量化模型真正能外推到哪里。",
+        "source": null
+      },
+      {
+        "title": "比较预训练迁移收益",
+        "rationale": "材料模型的预训练可能改善表示，但也可能只记住与目标集相似的材料。",
+        "concrete_plan": "对比从头训练、预训练冻结、全量微调和简单描述符基线。",
+        "validation": "在严格 OOD 划分上报告平均误差与最差分组误差。",
+        "expected_value": "区分预训练带来的稳健性与数据重叠效应。",
+        "source": null
+      },
+      {
+        "title": "增加不确定性估计",
+        "rationale": "外推区域缺少相似训练样本，单一预测值不足以提示风险。",
+        "concrete_plan": "为模型加入集成、深度集成或保序校准，并保留原始预测器。",
+        "validation": "用覆盖率、选择性风险和误差-置信度曲线验证。",
+        "expected_value": "让材料筛选流程知道何时需要实验复核。",
+        "source": null
+      },
+      {
+        "title": "连接候选发现闭环",
+        "rationale": "论文的 OOD 结果最终应服务于新材料筛选，而不只是离线榜单。",
+        "concrete_plan": "从留出区域提出候选，按模型分数和不确定性选样，再与实验或高精度计算核对。",
+        "validation": "记录发现率、验证成本和候选多样性。",
+        "expected_value": "评估模型是否真的减少材料搜索成本。",
+        "source": null
+      }
+    ]
   },
   "original_abstract": null,
   "bibtex": "@article{omee2024ood,\n  title={Structure-based out-of-distribution (OOD) materials property prediction: a benchmark study},\n  author={Omee, Sadman Sadeed and Fu, Nihang and Dong, Rongzhi and Hu, Ming and Hu, Jianjun},\n  journal={npj Computational Materials},\n  volume={10},\n  pages={144},\n  year={2024},\n  doi={10.1038/s41524-024-01316-4}\n}",
