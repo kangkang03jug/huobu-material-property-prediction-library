@@ -61,6 +61,7 @@
     "research_questions": [
       {
         "type": "inferred",
+        "original_question": null,
         "question": "材料性质任务中的预训练数据、数据规模与微调策略如何影响小样本及域外预测的泛化能力？",
         "how": "以 ALIGNN 为统一架构，在七类性质之间系统改变 pair-wise 预训练/微调组合、样本规模和冻结层策略，并将多性质联合预训练与 scratch 及 pair-wise 模型比较。",
         "answer": "效果依赖预训练与目标任务的关系；在所测策略中解冻全部层表现最好。MPT 在 7 组中的 4 组优于 pair-wise 模型，并在 JARVIS-DFT 2D band gap 域外测试中优于 scratch 和所选 pair-wise 模型。",

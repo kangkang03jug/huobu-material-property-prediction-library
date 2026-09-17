@@ -63,6 +63,7 @@
     "research_questions": [
       {
         "type": "inferred",
+        "original_question": null,
         "question": "结构 GNN 在材料分布外预测中的实际泛化能力如何，随机交叉验证中的模型排序能否代表新材料筛选表现？",
         "how": "对三个 MatBench 数据集构造五种 OOD 目标划分，使用 50-fold 评估八类 GNN，并比较 MAE 与 MatBench 随机划分基线。",
         "answer": "整体 OOD 误差高于 i.i.d. 基线，且不存在跨数据集和切分策略通用的获胜模型。CGCNN、ALIGNN、DeeperGATGNN 在若干任务较稳健，但优势依赖具体 OOD 目标。",
