@@ -4,6 +4,8 @@ A searchable research library for materials property prediction. It turns struct
 
 ## Research focus
 
+Bootstrap needs only the researcher's name and direction. When no language is specified, `language.explanation` defaults to `zh-CN`; in Chinese mode the profile's first primary direction and description must be natural Chinese for the homepage Hero. English standards can remain in `research_scope.secondary`, while `library_name` is only a brand label. The Hero uses `研究知识库 · <researcher>` and `研究知识库` in Chinese mode, and the corresponding `Research Library` labels in English mode.
+
 - **Primary:** Materials Property Prediction
 - **Related topics:** Materials Informatics, Crystal Graph Neural Networks, and Machine-Learned Interatomic Potentials
 - **Reading language:** Chinese explanations with mixed Chinese and English technical terms

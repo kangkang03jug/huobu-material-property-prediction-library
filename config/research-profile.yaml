@@ -1,10 +1,10 @@
 profile:
   researcher: HuoBu
   library_name: HuoBu's Materials Property Prediction Library
-  description: 面向材料属性预测的个人论文库，整理模型、数据、评估与可复现证据。
+  description: 围绕材料性质预测，整理模型、数据、评测方法与可复现证据。
 research_scope:
   primary:
-    - Materials Property Prediction
+    - 材料性质预测
   secondary:
     - Materials Informatics
     - Crystal Graph Neural Networks
