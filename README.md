@@ -29,7 +29,7 @@ GitHub Pages deploys automatically from `main` through `.github/workflows/pages.
 
 ## Daily updates
 
-Use `prompts/chatgpt-scheduled-task.md` to set up a recurring task with repository access. Each run reads the research profile and current library, selects one paper, prepares a Quick Read and evidence-backed report, validates the record, and adds a dated entry to Daily Archive. The schedule and timezone are in `config/research-profile.yaml`.
+Use `prompts/chatgpt-scheduled-task.md` to set up a recurring task with `Contents: Read and write` access to this exact repository. Each run reads the research profile and current library, selects one paper, prepares a Quick Read and evidence-backed report, performs structural checks, and writes one atomic commit. When the cloud task cannot run local `npm`, GitHub Actions CI and Pages are the authoritative validation gate; the task must wait for them and repair failures before reporting success. The schedule and timezone are in `config/research-profile.yaml`.
 
 The public site is read-only until the optional editor backend is configured. Do not commit credentials or API keys.
 
