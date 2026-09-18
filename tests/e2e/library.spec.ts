@@ -3,11 +3,11 @@ test('personalized library exposes Paper Pool, Quick Read, reports and Daily Arc
   page,
 }) => {
   await page.goto('/');
-  await expect(
-    page.getByRole('heading', { name: 'Materials Property Prediction' }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Materials Property Prediction' })).toBeVisible();
   await expect(page.locator('.hero-subtitle')).toHaveText('Research Library');
-  await expect(page.locator('.hero .lede')).toHaveText('面向材料属性预测的个人论文库，整理模型、数据、评估与可复现证据。');
+  await expect(page.locator('.hero .lede')).toHaveText(
+    '面向材料属性预测的个人论文库，整理模型、数据、评估与可复现证据。',
+  );
   await expect(page.getByRole('heading', { name: '今日论文' })).toBeVisible();
 
   await page.getByRole('link', { name: '论文池', exact: true }).click();
